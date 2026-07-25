@@ -4,7 +4,7 @@
 
 A retro-styled PSX first-person psychological horror game built in Unity (C#). Players navigate an eerie bus stop across seven distinct nights, managing atmospheric tension, environmental tasks, and evasive survival mechanics.
 
-Playable Web/Desktop Build: [gurd62.itch.io/night-bus](https://gurd62.itch.io/night-bus)
+Playable Desktop Build: [gurd62.itch.io/night-bus](https://gurd62.itch.io/night-bus)
 
 ---
 
