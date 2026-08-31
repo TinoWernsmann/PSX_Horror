@@ -45,7 +45,7 @@ Game events—such as `OnBorderHit`, `OnBusDestroy`, `OnPlayerHit`, and `OnAllTr
 Interactive elements implement the `IInteract` interface. The player controller casts raycasts to query for `IInteract` implementations, enforcing polymorphism and making it trivial to add new interactive objects without modifying player controller code.
 
 ### 4. Dynamic Sound & Aesthetic Pipeline
-* Dynamic audio transitions (wind state modulators, scream triggers, footstep tracking).
+* Dynamic audio transitions (scream triggers, footstep tracking).
 * Low-poly geometry paired with PSX post-processing shaders for authentic nostalgic horror atmosphere.
 
 ---
