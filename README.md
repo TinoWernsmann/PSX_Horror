@@ -2,10 +2,10 @@
 [![C#](https://img.shields.io/badge/C%23-9.0%2B-239120?style=for-the-badge&logo=c-sharp&logoColor=white)](https://docs.microsoft.com/en-us/dotnet/csharp/)
 [![Render Pipeline](https://img.shields.io/badge/URP-Universal%20Render%20Pipeline-4682B4?style=for-the-badge&logo=unity&logoColor=white)](https://unity.com/srp/Universal-Render-Pipeline)
 [![Play on itch.io](https://img.shields.io/badge/Play%20on-itch.io-FA5C5C?style=for-the-badge&logo=itch.io&logoColor=white)](https://gurd62.itch.io/night-bus)
-![Night Bus Game Cover](https://i.imgur.com/50VEmUQ.jpeg)
+
 
 # Night Bus
-
+![Night Bus Game Cover](https://i.imgur.com/50VEmUQ.jpeg)
 A retro-styled PSX first-person psychological horror game built in Unity (C#). Players navigate an eerie bus stop across seven distinct nights, managing atmospheric tension, environmental tasks, and evasive survival mechanics.
 
 Playable Desktop Build: [gurd62.itch.io/night-bus](https://gurd62.itch.io/night-bus)
