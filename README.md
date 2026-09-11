@@ -1,3 +1,7 @@
+[![Unity](https://img.shields.io/badge/Unity-2022.3%2B%20%7C%20Unity%206-000000?style=for-the-badge&logo=unity&logoColor=white)](https://unity.com/)
+[![C#](https://img.shields.io/badge/C%23-9.0%2B-239120?style=for-the-badge&logo=c-sharp&logoColor=white)](https://docs.microsoft.com/en-us/dotnet/csharp/)
+[![Render Pipeline](https://img.shields.io/badge/URP-Universal%20Render%20Pipeline-4682B4?style=for-the-badge&logo=unity&logoColor=white)](https://unity.com/srp/Universal-Render-Pipeline)
+[![Play on itch.io](https://img.shields.io/badge/Play%20on-itch.io-FA5C5C?style=for-the-badge&logo=itch.io&logoColor=white)](https://gurd62.itch.io/night-bus)
 ![Night Bus Game Cover](https://i.imgur.com/50VEmUQ.jpeg)
 
 # Night Bus
