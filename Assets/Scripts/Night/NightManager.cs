@@ -6,6 +6,7 @@ public class NightManager : MonoBehaviour
 {
     public event Action OnNewNight;
 
+    [SerializeField] private NightBase[] _nights;
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private float _textTimer;
     [SerializeField] private GameObject _moonBlocker;
@@ -23,9 +24,14 @@ public class NightManager : MonoBehaviour
     [SerializeField] private GameObject _hangedPerson;
     [SerializeField] private CreatureScript _creature;
 
+    private int _nightCount = 0;
+
+    public int NightCount => _nightCount;
+
     private void Start()
     {
         _trashCanLogic.OnAllTrashCollected += _trashCanLogic_OnAllTrashCollected;
+        NightBase.OnNightBegin += ShowBeginNightUI;
     }
 
     public void ChooseNight(NightSO night)
@@ -59,6 +65,11 @@ public class NightManager : MonoBehaviour
         }
     }
 
+    public void IncreaseNight()
+    {
+        _nightCount++;
+    }
+
     private void PlayNightOne(NightSO night)
     {
         SpawnBus();
@@ -67,21 +78,21 @@ public class NightManager : MonoBehaviour
 
     private void PlayNightTwo(NightSO night)
     {
-        MoveEarthObject(night.moonBlockerOffset);
+        MoveMoonBlocker(night.moonBlockerOffset);
         SpawnBus();
         StartCoroutine(ShowNightText(night));
     }
 
     private void PlayNightThree(NightSO night)
     {
-        MoveEarthObject(night.moonBlockerOffset);
+        MoveMoonBlocker(night.moonBlockerOffset);
         ActivateTrash();
         StartCoroutine(ShowNightText(night));
     }
 
     private void PlayNightFour(NightSO night)
     {
-        MoveEarthObject(night.moonBlockerOffset);
+        MoveMoonBlocker(night.moonBlockerOffset);
         SpawnBus();
         Invoke("PlayScream", 10f);
         StartCoroutine(ShowNightText(night));
@@ -92,7 +103,7 @@ public class NightManager : MonoBehaviour
     {
         DespawnMonster();
         SpawnDeadPerson();
-        MoveEarthObject(night.moonBlockerOffset);
+        MoveMoonBlocker(night.moonBlockerOffset);
         SpawnBus();
         StartCoroutine(ShowNightText(night));
     }
@@ -115,6 +126,11 @@ public class NightManager : MonoBehaviour
     private void _trashCanLogic_OnAllTrashCollected()
     {
         SpawnBus();
+    }
+
+    private void ShowBeginNightUI(string nightText)
+    {
+        //StartCoroutine(ShowNightText(night));
     }
 
     private IEnumerator ShowNightText(NightSO night)
@@ -148,7 +164,7 @@ public class NightManager : MonoBehaviour
         }
     }
 
-    private void MoveEarthObject(float offset)
+    private void MoveMoonBlocker(float offset)
     {
         _moonBlocker.transform.position += new Vector3(0, offset, 0);
     }
@@ -168,6 +184,7 @@ public class NightManager : MonoBehaviour
     private void OnDestroy()
     {
         _trashCanLogic.OnAllTrashCollected -= _trashCanLogic_OnAllTrashCollected;
+        NightBase.OnNightBegin -= ShowBeginNightUI;
     }
 
     private void SpawnBus()
@@ -188,11 +205,6 @@ public class NightManager : MonoBehaviour
         rend.material.EnableKeyword("_EMISSION");
 
         rend.material.SetColor("_EmissionColor", Color.red);
-    }
-
-    private void PlayScream()
-    {
-        _audioManager.PlayScream();
     }
 
     public void ChangeWindState()

@@ -11,6 +11,7 @@ public class StartMenuLogic : MonoBehaviour
     {
         StartCoroutine(_spawner.SpawnLandscape());
         _audioManager.PlayMusic();
+        Screen.SetResolution(320, 240, FullScreenMode.ExclusiveFullScreen);
     }
 
     private void OnEnable()

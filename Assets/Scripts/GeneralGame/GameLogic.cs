@@ -86,6 +86,7 @@ public class GameLogic : MonoBehaviour
 
         _uiManager.DisableSprintBar();
 
+        // TODO: Restart current night!
         Invoke("ReturnToMainMenu", 2f);
     }
 

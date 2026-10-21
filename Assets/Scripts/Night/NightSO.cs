@@ -3,12 +3,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewNightData", menuName = "ScriptableObjects/Night Data")]
 public class NightSO : ScriptableObject
 {
-    public int nightNumber;
+    public int nightNumber; // remove, handled by night manager
     public string nightText;
     public float nightTimer;
     public float busSpawnTimer;
     public float busDepartTimer;
     public float moonBlockerOffset;
-    public float monsterSpawnTime;
-    public GameObject monsterSpawnPoint;
+    public float monsterSpawnTime; // remove, handled per night
+    public GameObject monsterSpawnPoint; // remove, handled per night
 }

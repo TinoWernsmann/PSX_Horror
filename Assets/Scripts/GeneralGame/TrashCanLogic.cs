@@ -45,7 +45,7 @@ public class TrashCanLogic : MonoBehaviour, IInteract
     {
         _canList = new List<CanLogic>();
 
-        _cans = FindObjectsByType<CanLogic>(FindObjectsSortMode.None);
+        _cans = FindObjectsByType<CanLogic>();
         foreach (var c in _cans)
         {
             _canList.Add(c);

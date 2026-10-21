@@ -10,7 +10,6 @@ public class NightIntroManager : MonoBehaviour
     [SerializeField] private Player _player;
 
 
-    private int _nightCount = 0;
 
     private void Start()
     {
@@ -26,10 +25,10 @@ public class NightIntroManager : MonoBehaviour
 
     public void ShowNight()
     {
-        if (_nightCount >= _nightSOs.Length) return;
+        if (_nightManager.NightCount >= _nightSOs.Length) return;
 
-        StartNight(_nightSOs[_nightCount].nightNumber);
-        StartCoroutine(ShowNightScreen(_nightSOs[_nightCount].nightTimer));
+        StartNight(_nightSOs[_nightManager.NightCount].nightNumber);
+        StartCoroutine(ShowNightScreen(_nightSOs[_nightManager.NightCount].nightTimer));
     }
 
     private IEnumerator ShowNightScreen(float timer)
@@ -50,18 +49,13 @@ public class NightIntroManager : MonoBehaviour
     private void StartNight(int nightNumber)
     {
         _uiManager.ShowNightUI(nightNumber);
-        _nightManager.ChooseNight(_nightSOs[_nightCount]);
+        _nightManager.ChooseNight(_nightSOs[_nightManager.NightCount]);
         Time.timeScale = 0f;
     }
 
     public NightSO GetNight()
     {
-        return _nightSOs[_nightCount];
-    }
-
-    public void IncreaseNight()
-    {
-        _nightCount++;
+        return _nightSOs[_nightManager.NightCount];
     }
 
     private void OnDestroy()
