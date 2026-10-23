@@ -1,65 +1,38 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class NightIntroManager : MonoBehaviour
 {
-    [SerializeField] private BusDestroyer _busDestroyer;
+    public event Action OnIntroDone;
+
     [SerializeField] private NightSO[] _nightSOs;
     [SerializeField] private NightManager _nightManager;
     [SerializeField] private UIManager _uiManager;
     [SerializeField] private Player _player;
 
-
-
-    private void Start()
+    public void ShowNight(NightSO night)
     {
-        _busDestroyer.OnBusDestroy += _busDestroyer_OnBusDestroy;
+        StartCoroutine(ShowNightScreen(night.nightTimer, night));
     }
 
-    private void _busDestroyer_OnBusDestroy()
+    private IEnumerator ShowNightScreen(float timer, NightSO night)
     {
-        _uiManager.ShowBlackScreen();
-        _nightManager.ChangeWindState();
-        Invoke("ShowNight", 2f);
-    }
+        StartNight(night.nightNumber);
 
-    public void ShowNight()
-    {
-        if (_nightManager.NightCount >= _nightSOs.Length) return;
-
-        StartNight(_nightSOs[_nightManager.NightCount].nightNumber);
-        StartCoroutine(ShowNightScreen(_nightSOs[_nightManager.NightCount].nightTimer));
-    }
-
-    private IEnumerator ShowNightScreen(float timer)
-    {
         yield return new WaitForSecondsRealtime(timer);
 
-        DisableNightIntro();
-        _player.SetAlive();
-    }
-
-    private void DisableNightIntro()
-    {
         _uiManager.DisableNightUI();
-        Time.timeScale = 1f;
-        _nightManager.ChangeWindState();
+        OnIntroDone?.Invoke();
     }
 
     private void StartNight(int nightNumber)
     {
         _uiManager.ShowNightUI(nightNumber);
-        _nightManager.ChooseNight(_nightSOs[_nightManager.NightCount]);
-        Time.timeScale = 0f;
     }
 
     public NightSO GetNight()
     {
         return _nightSOs[_nightManager.NightCount];
-    }
-
-    private void OnDestroy()
-    {
-        _busDestroyer.OnBusDestroy -= _busDestroyer_OnBusDestroy;
     }
 }

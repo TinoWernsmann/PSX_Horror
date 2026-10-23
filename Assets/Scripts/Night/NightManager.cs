@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NightManager : MonoBehaviour
 {
@@ -8,21 +9,21 @@ public class NightManager : MonoBehaviour
 
     [SerializeField] private NightBase[] _nights;
     [SerializeField] private UIManager _uiManager;
-    [SerializeField] private float _textTimer;
     [SerializeField] private GameObject _moonBlocker;
-    [SerializeField] private GameObject _moon;
+    [SerializeField] private GameObject _moon; // per night, remove
     [SerializeField] private Player _player;
     [SerializeField] private Transform _playerStartPos;
-    [SerializeField] private GameObject _canTrash;
-    [SerializeField] private BusSpawner _busSpawner;
-    [SerializeField] private BusLogic _busLogic;
+    [SerializeField] private GameObject _canTrash; // per night, remove
     [SerializeField] private NightIntroManager _nightIntroManager;
-    [SerializeField] private TrashCanLogic _trashCanLogic;
+    [SerializeField] private TrashCanLogic _trashCanLogic; // per night, remove
     [SerializeField] private AudioManager _audioManager;
-    [SerializeField] private MonsterSpawner _monsterSpawner;
-    [SerializeField] private ChaseMonsterSpawner _chaseSpawner;
-    [SerializeField] private GameObject _hangedPerson;
-    [SerializeField] private CreatureScript _creature;
+    [SerializeField] private MonsterSpawner _monsterSpawner; // per night, remove
+    [SerializeField] private ChaseMonsterSpawner _chaseSpawner; // per night, remove
+    [SerializeField] private GameObject _hangedPerson; // per night, remove
+    [SerializeField] private CreatureScript _creature; // per night, remove
+    [SerializeField] private BusDestroyer _busDestroyer;
+
+    private const float TEXT_TIMER = 3f;
 
     private int _nightCount = 0;
 
@@ -32,70 +33,71 @@ public class NightManager : MonoBehaviour
     {
         _trashCanLogic.OnAllTrashCollected += _trashCanLogic_OnAllTrashCollected;
         NightBase.OnNightBegin += ShowBeginNightUI;
+        _busDestroyer.OnBusDestroy += _busDestroyer_OnBusDestroy;
+        _nightIntroManager.OnIntroDone += _nightIntroManager_OnIntroDone;
+
+        ChooseNight();
     }
 
-    public void ChooseNight(NightSO night)
+    private void _nightIntroManager_OnIntroDone()
+    {
+        Time.timeScale = 1f;
+        ChangeWindState();
+    }
+
+    private void _busDestroyer_OnBusDestroy()
+    {
+        _uiManager.ShowBlackScreen();
+        ChangeWindState();
+        _nightCount++;
+
+        if (CheckGameDone())
+        {
+            return;
+        }
+
+        _nightIntroManager.ShowNight(_nights[_nightCount].NightData);
+    }
+
+    public void ChooseNight()
     {
         ResetPlayerPosition();
         OnNewNight?.Invoke();
 
-        switch (night.nightNumber)
+        StartNight();
+    }
+
+    private void StartNight()
+    {
+        _nightIntroManager.ShowNight(_nights[_nightCount].NightData);
+        _nights[_nightCount].PlayNight();
+    }
+
+    private bool CheckGameDone()
+    {
+        if (_nightCount >= _nights.Length)
         {
-            case 1:
-                PlayNightOne(night);
-                break;
-            case 2:
-                PlayNightTwo(night);
-                break;
-            case 3:
-                PlayNightThree(night);
-                break;
-            case 4:
-                PlayNightFour(night);
-                break;
-            case 5:
-                PlayNightFive(night);
-                break;
-            case 6:
-                PlayNightSix(night);
-                break;
-            case 7:
-                PlayNightSeven(night);
-                break;
+            SceneManager.LoadScene("MainMenuScene");
+            return true;
         }
-    }
-
-    public void IncreaseNight()
-    {
-        _nightCount++;
-    }
-
-    private void PlayNightOne(NightSO night)
-    {
-        SpawnBus();
-        StartCoroutine(ShowNightText(night));
+        return false;
     }
 
     private void PlayNightTwo(NightSO night)
     {
         MoveMoonBlocker(night.moonBlockerOffset);
-        SpawnBus();
-        StartCoroutine(ShowNightText(night));
     }
 
     private void PlayNightThree(NightSO night)
     {
         MoveMoonBlocker(night.moonBlockerOffset);
         ActivateTrash();
-        StartCoroutine(ShowNightText(night));
     }
 
     private void PlayNightFour(NightSO night)
     {
         MoveMoonBlocker(night.moonBlockerOffset);
-        SpawnBus();
         Invoke("PlayScream", 10f);
-        StartCoroutine(ShowNightText(night));
         StartCoroutine(SpawnMonster(night));
     }
 
@@ -104,40 +106,33 @@ public class NightManager : MonoBehaviour
         DespawnMonster();
         SpawnDeadPerson();
         MoveMoonBlocker(night.moonBlockerOffset);
-        SpawnBus();
-        StartCoroutine(ShowNightText(night));
     }
 
     private void PlayNightSix(NightSO night)
     {
-        _player.SetAlive();
         ChangeMoonToRed();
-        SpawnBus();
-        StartCoroutine(ShowNightText(night));
     }
 
     private void PlayNightSeven(NightSO night)
     {
-        SpawnBus();
-        StartCoroutine(ShowNightText(night));
         StartCoroutine(SpawnChasingMonster(night));
     }
 
     private void _trashCanLogic_OnAllTrashCollected()
     {
-        SpawnBus();
+        //SpawnBus();
     }
 
     private void ShowBeginNightUI(string nightText)
     {
-        //StartCoroutine(ShowNightText(night));
+        StartCoroutine(ShowNightText(nightText));
     }
 
-    private IEnumerator ShowNightText(NightSO night)
+    private IEnumerator ShowNightText(string nightText)
     {
-        _uiManager.ShowBusText(night.nightText);
+        _uiManager.ShowBusText(nightText);
 
-        yield return new WaitForSeconds(_textTimer);
+        yield return new WaitForSeconds(TEXT_TIMER);
 
         _uiManager.HideBusText();
     }
@@ -185,12 +180,8 @@ public class NightManager : MonoBehaviour
     {
         _trashCanLogic.OnAllTrashCollected -= _trashCanLogic_OnAllTrashCollected;
         NightBase.OnNightBegin -= ShowBeginNightUI;
-    }
-
-    private void SpawnBus()
-    {
-        _busSpawner.StartNight(_nightIntroManager.GetNight().busSpawnTimer + _nightIntroManager.GetNight().nightTimer);
-        _busLogic.SetDepartTimer(_nightIntroManager.GetNight().busDepartTimer);
+        _nightIntroManager.OnIntroDone -= _nightIntroManager_OnIntroDone;
+        _busDestroyer.OnBusDestroy -= _busDestroyer_OnBusDestroy;
     }
 
     private void SpawnDeadPerson()

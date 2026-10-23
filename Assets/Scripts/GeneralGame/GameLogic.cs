@@ -27,9 +27,6 @@ public class GameLogic : MonoBehaviour
         {
             border.OnBorderHit += Border_OnBorderHit;
         }
-        
-        // Show Number of Night Screen
-        _nightIntroManager.ShowNight();
 
         // Event if Bus reaches the end of the Street
         _busDestroyer.OnBusDestroy += _busDestroyer_OnBusDestroy;
